@@ -50,16 +50,18 @@ public class ListFragment extends Fragment {
         nextbus=bundle.getString("NextBusTime");
         busNum=bundle.getInt("BusNumber");
 
-        List <String> listClone = new ArrayList<String>();
+        Log.e("nextbus value : ", nextbus+"");
         for (String string : bustime) {
             if(string.matches(nextbus)){
                 where=bustime.indexOf(string);
+                Log.e("Where value : ", where+"");
             }
         }
         setupRecyclerView(rv);
 
         timeThread a= new timeThread();
         a.start();
+
         rv.getLayoutManager().scrollToPosition(where);
         return rv;
     }
@@ -102,6 +104,8 @@ public class ListFragment extends Fragment {
                 bustime);
         recyclerView.setAdapter(simpleStringRecyclerViewAdapter);//치즈를 시간대로 변경
 
+        //recyclerView.
+
     }
 
  /*   private List<String> getSublist(String[] array, int amount) {
@@ -120,6 +124,9 @@ public class ListFragment extends Fragment {
         private int mBackground;
         private List<String> mValues;
         private int index_nextbus=0;
+
+        private static final int FOOTER_VIEW = 1;
+
         public class ViewHolder extends RecyclerView.ViewHolder {
             public String mBoundString;
 
@@ -131,13 +138,21 @@ public class ListFragment extends Fragment {
                 super(view);
                 mView = view;
                 //mImageView = view.findViewById(R.id.avatar);
-                mTextView = view.findViewById(android.R.id.text1);
+                mTextView = view.findViewById(R.id.text1);
             }
 
             @Override
             public String toString() {
                 return super.toString() + " '" + mTextView.getText();
             }
+        }
+
+        public class FooterViewHolder extends ViewHolder {
+
+            public FooterViewHolder(View view) {
+                super(view);
+            }
+
         }
 
         public SimpleStringRecyclerViewAdapter(Context context, List<String> items) {
@@ -150,6 +165,21 @@ public class ListFragment extends Fragment {
 
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+            if(viewType == FOOTER_VIEW){
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.list_item, parent, false);
+                view.setBackgroundResource(mBackground);
+
+                TextView tv = view.findViewById(R.id.text1);
+
+                ViewGroup.LayoutParams layoutParams = tv.getLayoutParams();
+                layoutParams.height = layoutParams.height * 8;
+                tv.requestLayout();
+
+                return new FooterViewHolder(view);
+            }
+
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.list_item, parent, false);
             view.setBackgroundResource(mBackground);
@@ -158,11 +188,14 @@ public class ListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+            if(holder instanceof FooterViewHolder){
+                return ;
+            }
+
             holder.mBoundString = mValues.get(position);
             holder.mTextView.setText(mValues.get(position));
            // System.out.println(mValues.get(position).toString()+" "+nextbus);
             String temp=mValues.get(position).toString();
-
 
             if (temp.equals(nextbus))
             {
@@ -195,9 +228,34 @@ public class ListFragment extends Fragment {
         }
 
 
-        @Override
+        /*@Override
         public int getItemCount() {
             return mValues.size();
+        }*/
+
+        @Override
+        public int getItemViewType(int position) {
+            if (position == mValues.size()) {
+                // This is where we'll add footer.
+                return FOOTER_VIEW;
+            }
+
+            return super.getItemViewType(position);
+        }
+
+        @Override
+        public int getItemCount() {
+            if (mValues == null) {
+                return 0;
+            }
+
+            if (mValues.size() == 0) {
+                //Return 1 here to show nothing
+                return 1;
+            }
+
+            // Add extra view to show the footer view
+            return mValues.size() + 1;
         }
     }
 }
