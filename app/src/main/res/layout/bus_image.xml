@@ -1,48 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/t0_1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:fitsSystemWindows="true"
         android:scaleType="centerInside"
         android:src="@drawable/thirty_first" />
     <ImageView
         android:id="@+id/t0_2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:fitsSystemWindows="true"
         android:scaleType="centerInside"
         android:src="@drawable/thirty_second"/>
     <ImageView
         android:id="@+id/t4_1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:fitsSystemWindows="true"
         android:scaleType="centerInside"
         android:src="@drawable/thirtyfour_first"/>
     <ImageView
         android:id="@+id/t4_2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:fitsSystemWindows="true"
-        android:scaleType="centerCrop"
+        android:scaleType="centerInside"
         android:src="@drawable/thiryfour_second"/>
     <ImageView
         android:id="@+id/t1_1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:fitsSystemWindows="true"
-        android:scaleType="centerCrop"
+        android:scaleType="centerInside"
         android:src="@drawable/thirtyone_first"/>
     <ImageView
         android:id="@+id/t1_2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:fitsSystemWindows="true"
-        android:scaleType="centerCrop"
+        android:scaleType="centerInside"
         android:src="@drawable/thirtyone_second"/>
-</LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ViewFlipper
+            android:id="@+id/flipper"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></ViewFlipper>
+    </LinearLayout>
+</ScrollView>
