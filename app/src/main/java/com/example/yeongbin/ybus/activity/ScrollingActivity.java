@@ -1,8 +1,6 @@
-package com.example.yeongbin.ybus;
+package com.example.yeongbin.ybus.activity;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -13,44 +11,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.yeongbin.ybus.classes.BusTimeChecker;
+import com.example.yeongbin.ybus.classes.BusTimeInfo;
+import com.example.yeongbin.ybus.R;
+
 import java.util.ArrayList;
 import java.util.List;
-import android.os.AsyncTask;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.*;
-import android.app.Activity;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.widget.TextView;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-import java.util.Random;
-import android.os.AsyncTask;
-import android.util.Log;
 
 
 public class ScrollingActivity extends AppCompatActivity  {
@@ -84,7 +61,8 @@ public class ScrollingActivity extends AppCompatActivity  {
 
                     for(int x=0;x<3;x++)
                     {
-                        ArrayList<String> time = new ArrayList<>();
+                        //ArrayList<String> time = new ArrayList<>();
+                        ArrayList<BusTimeInfo> busTimeInfos = new ArrayList<>();
                         if(x==0)
                         bus_number=30;
                         else  if (x==1)
@@ -94,7 +72,7 @@ public class ScrollingActivity extends AppCompatActivity  {
 
                         try {
                             BusTimeChecker a = new BusTimeChecker();
-                            ArrayList<BusTimeInfo> busTimeInfos;//ainfo.get(bus_number+"");
+                            //ArrayList<BusTimeInfo> busTimeInfos;//ainfo.get(bus_number+"");
                             busTimeInfos = a.requesutData("http://its.wonju.go.kr/busroute/selectCityScheduleView.do?rn=", bus_number);
                             ainfo.put(""+bus_number, busTimeInfos);
 
@@ -104,7 +82,7 @@ public class ScrollingActivity extends AppCompatActivity  {
                             preBusTimeDiff = (int) result.get("PreBusTimeDiff");
                             System.out.println(nextBusTime+" 루프 도냐");
 
-                            try {
+                            /*try {
 
                                 for (int j = 0; j < BusTimeChecker.MAX; j++) {
 
@@ -121,7 +99,7 @@ public class ScrollingActivity extends AppCompatActivity  {
 
                                 //catch(NumberFormatException e) {}
                             } catch (Exception e) {
-                            }
+                            }*/
 
                         } catch (IOException e) {
                             // TODO Auto-generated catch block
@@ -129,25 +107,25 @@ public class ScrollingActivity extends AppCompatActivity  {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        BusTimeChecker.th1 = time;
+                        //BusTimeChecker.th1 = time;
 
                         if(x==0){
 
-                            bundle_30.putStringArrayList("BusTime",BusTimeChecker.th1);
+                            bundle_30.putParcelableArrayList("BusTime",busTimeInfos);
                             bundle_30.putString("NextBusTime",nextBusTime);
                             bundle_30.putInt("PrevBusTime",preBusTimeDiff);
                             bundle_30.putInt("BusNumber", 30);
                         }
                         else if(x==1){
 
-                            bundle_34.putStringArrayList("BusTime",BusTimeChecker.th1);
+                            bundle_34.putParcelableArrayList("BusTime",busTimeInfos);
                             bundle_34.putString("NextBusTime",nextBusTime);
                             bundle_34.putInt("PrevBusTime",preBusTimeDiff);
                             bundle_34.putInt("BusNumber", 34);
                         }
                         else if(x==2) {
 
-                            bundle_31.putStringArrayList("BusTime",BusTimeChecker.th1);
+                            bundle_31.putParcelableArrayList("BusTime",busTimeInfos);
                             bundle_31.putString("NextBusTime", nextBusTime);
                             bundle_31.putInt("PrevBusTime", preBusTimeDiff);
                             bundle_31.putInt("BusNumber", 31);
@@ -198,9 +176,9 @@ public class ScrollingActivity extends AppCompatActivity  {
 
 
 
-        ListFragment busStop30 = new ListFragment();
-        ListFragment busStop34 = new ListFragment();
-        ListFragment busStop31 = new ListFragment();
+        Bus30Fragment busStop30 = new Bus30Fragment();
+        Bus34Fragment busStop34 = new Bus34Fragment();
+        Bus31Fragment busStop31 = new Bus31Fragment();
 
 
 
@@ -255,7 +233,7 @@ public class ScrollingActivity extends AppCompatActivity  {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(getApplicationContext(),BusMap.class);
-
+                        System.out.println("즤랄");
                         startActivity(intent);
                     }
                 }

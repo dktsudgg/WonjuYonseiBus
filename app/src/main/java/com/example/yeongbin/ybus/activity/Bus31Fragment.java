@@ -1,8 +1,7 @@
-package com.example.yeongbin.ybus;
+package com.example.yeongbin.ybus.activity;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,23 +15,21 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
+import com.example.yeongbin.ybus.R;
+import com.example.yeongbin.ybus.classes.BusTimeChecker;
+import com.example.yeongbin.ybus.classes.BusTimeInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.util.*;
-public class ListFragment extends Fragment {
+
+public class Bus31Fragment extends Fragment {
     //Handler mHandler = null;
-    public ArrayList<String> bustime=null;
+    public ArrayList<BusTimeInfo> bustime=null;
     public String nextbus=null;
     public int where=0;
     public int busNum;
@@ -46,14 +43,14 @@ public class ListFragment extends Fragment {
                 R.layout.fragment_list, container, false);
 
         Bundle bundle = getArguments();
-        bustime=bundle.getStringArrayList("BusTime");
+        bustime=bundle.getParcelableArrayList("BusTime");
         nextbus=bundle.getString("NextBusTime");
         busNum=bundle.getInt("BusNumber");
 
         Log.e("nextbus value : ", nextbus+"");
-        for (String string : bustime) {
-            if(string.matches(nextbus)){
-                where=bustime.indexOf(string);
+        for (BusTimeInfo bus : bustime) {
+            if(bus.getFrom_yonsei().matches(nextbus)){
+                where=bustime.indexOf(bus);
                 Log.e("Where value : ", where+"");
             }
         }
@@ -73,9 +70,9 @@ public class ListFragment extends Fragment {
             while (true) {
 
                 try {
-                    JSONObject result = BusTimeChecker.getNextBus(ScrollingActivity.ainfo.get(""+busNum));
+                    JSONObject result = BusTimeChecker.getNextBus(bustime);
                     nextbus = result.get("NextBusTime").toString();
-                   // Log.e("timeThread n: ", nextbus);
+                    // Log.e("timeThread n: ", nextbus);
 
                     if(simpleStringRecyclerViewAdapter != null)
                         mHandler.post(new Runnable() {
@@ -122,7 +119,7 @@ public class ListFragment extends Fragment {
 
         private final TypedValue mTypedValue = new TypedValue();
         private int mBackground;
-        private List<String> mValues;
+        private List<BusTimeInfo> mValues;
         private int index_nextbus=0;
 
         private static final int FOOTER_VIEW = 1;
@@ -133,21 +130,19 @@ public class ListFragment extends Fragment {
             public final View mView;
             //public final ImageView mImageView;
             public final TextView mTextView;
+            public final TextView mTextView2;
 
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
                 //mImageView = view.findViewById(R.id.avatar);
                 mTextView = view.findViewById(R.id.text1);
+                mTextView2 = view.findViewById(R.id.text2);
             }
 
-            @Override
-            public String toString() {
-                return super.toString() + " '" + mTextView.getText();
-            }
         }
 
-        public class FooterViewHolder extends ViewHolder {
+        public class FooterViewHolder extends SimpleStringRecyclerViewAdapter.ViewHolder {
 
             public FooterViewHolder(View view) {
                 super(view);
@@ -155,17 +150,18 @@ public class ListFragment extends Fragment {
 
         }
 
-        public SimpleStringRecyclerViewAdapter(Context context, List<String> items) {
+        public SimpleStringRecyclerViewAdapter(Context context, List<BusTimeInfo> items) {
             context.getTheme().resolveAttribute(R.attr.selectableItemBackground, mTypedValue, true);
 
             mBackground = mTypedValue.resourceId;
             mValues = items;
-           // index_nextbus=index;
+            // index_nextbus=index;
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public SimpleStringRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
+            // Footer인경우.
             if(viewType == FOOTER_VIEW){
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.list_item, parent, false);
@@ -174,28 +170,37 @@ public class ListFragment extends Fragment {
                 TextView tv = view.findViewById(R.id.text1);
 
                 ViewGroup.LayoutParams layoutParams = tv.getLayoutParams();
-                layoutParams.height = layoutParams.height * 8;
+                layoutParams.height = layoutParams.height * 7;
                 tv.requestLayout();
 
-                return new FooterViewHolder(view);
+                return new SimpleStringRecyclerViewAdapter.FooterViewHolder(view);
             }
 
+            // 기존 item
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.list_item, parent, false);
             view.setBackgroundResource(mBackground);
-            return new ViewHolder(view);
+            return new SimpleStringRecyclerViewAdapter.ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-            if(holder instanceof FooterViewHolder){
+        public void onBindViewHolder(@NonNull final SimpleStringRecyclerViewAdapter.ViewHolder holder, int position) {
+
+            // Footer일경우는 아무 설정 안하고 종료
+            if(holder instanceof SimpleStringRecyclerViewAdapter.FooterViewHolder){
                 return ;
             }
 
-            holder.mBoundString = mValues.get(position);
-            holder.mTextView.setText(mValues.get(position));
-           // System.out.println(mValues.get(position).toString()+" "+nextbus);
-            String temp=mValues.get(position).toString();
+            // 비고 (출발지)
+            Log.e("get_start_location", mValues.get(position).get_start_location());
+            holder.mTextView2.setText(mValues.get(position).get_start_location());
+
+            holder.mBoundString = mValues.get(position).getFrom_yonsei();
+
+            // 출발시간
+            holder.mTextView.setText(mValues.get(position).getFrom_yonsei());
+            // System.out.println(mValues.get(position).toString()+" "+nextbus);
+            String temp=mValues.get(position).getFrom_yonsei().toString();
 
             if (temp.equals(nextbus))
             {
