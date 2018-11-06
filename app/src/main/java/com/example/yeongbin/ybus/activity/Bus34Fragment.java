@@ -24,13 +24,10 @@ import com.example.yeongbin.ybus.classes.BusTimeInfo;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.StringTokenizer;
 
-public class Bus31Fragment extends Fragment {
+public class Bus34Fragment extends Fragment {
     //Handler mHandler = null;
     public ArrayList<BusTimeInfo> bustime=null;
     public String nextbus=null;
@@ -47,8 +44,6 @@ public class Bus31Fragment extends Fragment {
 
         Bundle bundle = getArguments();
         bustime=bundle.getParcelableArrayList("BusTime");
-
-        bustime=get_31bus(bustime);
         nextbus=bundle.getString("NextBusTime");
         busNum=bundle.getInt("BusNumber");
 
@@ -60,43 +55,12 @@ public class Bus31Fragment extends Fragment {
             }
         }
         setupRecyclerView(rv);
+
         timeThread a= new timeThread();
         a.start();
+
         rv.getLayoutManager().scrollToPosition(where);
         return rv;
-    }
-    public ArrayList<BusTimeInfo> get_31bus(ArrayList<BusTimeInfo> busList){
-        long t = System.currentTimeMillis();
-        Date currentDate = new Date(t);
-        SimpleDateFormat dateTime = new SimpleDateFormat("E");
-
-
-
-        String currentTime = dateTime.format(t);
-        System.out.println("-"+currentTime+"-");
-        if (currentTime.equals("월") ||currentTime.equals("화")||currentTime.equals("수")||currentTime.equals("목")||currentTime.equals("금"))
-        {
-            for(int i=0;i<28;i++){
-                try {
-                    busList.remove(0);
-                }
-                catch (IndexOutOfBoundsException e){
-                    break;
-                }
-        }
-        }
-        else
-        {
-            for(int i=0;i<28;i++){
-                try {
-                    busList.remove(28);
-                }
-                catch(IndexOutOfBoundsException e){
-                    break;
-                }
-            }
-        }
-        return busList;
     }
     public class timeThread extends Thread
     {
@@ -107,7 +71,6 @@ public class Bus31Fragment extends Fragment {
 
                 try {
                     JSONObject result = BusTimeChecker.getNextBus(bustime);
-
                     nextbus = result.get("NextBusTime").toString();
                     // Log.e("timeThread n: ", nextbus);
 
@@ -239,12 +202,12 @@ public class Bus31Fragment extends Fragment {
             // System.out.println(mValues.get(position).toString()+" "+nextbus);
             String temp=mValues.get(position).getFrom_yonsei().toString();
 
-            if (temp.equals(nextbus))
+            if (temp.equals(nextbus) )
             {
                 holder.mTextView.setTextColor(Color.RED);
                 where=position;
             }
-            if (!temp.equals(nextbus))
+            else
             {
                 holder.mTextView.setTextColor(Color.BLACK);
             }

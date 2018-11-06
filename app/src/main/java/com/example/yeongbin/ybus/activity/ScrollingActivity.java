@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +15,8 @@ import android.content.Intent;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -51,7 +54,6 @@ public class ScrollingActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_scrolling);
         //Intent intent = getIntent();
        // final String cheeseName = intent.getStringExtra(EXTRA_NAME);
-
         try {
             Thread th = new Thread() {
                 public void run() {
@@ -159,10 +161,17 @@ public class ScrollingActivity extends AppCompatActivity  {
         tabLayout.setupWithViewPager(viewPager);
 
         loadBackdrop();
+        FrameLayout frame = findViewById(R.id.frame);
+        ImageView imageView = findViewById(R.id.backdrop);
 
+        imageView.setOnClickListener(new MyListener());
 
-
-
+        frame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.e("Frame", "---");
+            }
+        });
 
     }
 
@@ -227,20 +236,19 @@ public class ScrollingActivity extends AppCompatActivity  {
     private void loadBackdrop() {
         final ImageView imageView = findViewById(R.id.backdrop);
         Glide.with(this).load(BusTimeChecker.getRandomCheeseDrawable()).apply(RequestOptions.centerCropTransform()).into(imageView);
-        imageView.setOnClickListener(new MyListener());
     }
     class MyListener implements View.OnClickListener{
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(),BusMap.class);
-                        System.out.println("즤랄");
+                        Log.e("MyListener", "---");
+                        Intent intent = new Intent(getApplicationContext(),Choose.class);
                         startActivity(intent);
                     }
                 }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_scrolling, menu);
+        //getMenuInflater().inflate(R.menu.menu_scrolling, menu);
         return true;
     }
 
