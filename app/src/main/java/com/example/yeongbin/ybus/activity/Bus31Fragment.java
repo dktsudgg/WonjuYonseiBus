@@ -29,10 +29,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
-//where 가 가르키는 곳이야 -> 51번에서 버스시간을 주말주중에서 나눠서 받고 그걸 기반으로 where를 다시 설정해줘야 되는데
-//56중 코드는 30 34 에도 잇는 where 값 인덱스로 찾아주는건데 안먹어서 다시 만들어 줘야대
-
-//학교에서 출발과  그외 데이터를 나눠야함 비고부분
+//학교에서 출발과  그외 데이터를 나눠야함 비고부분 (연세대 그외만 만들면되 31번은 그외출 34번은 연세대출 그외출 30번은 연세대출
 public class Bus31Fragment extends Fragment {
     //Handler mHandler = null;
     public ArrayList<BusTimeInfo> bustime=null;
@@ -245,6 +242,7 @@ public class Bus31Fragment extends Fragment {
             if (temp.equals(nextbus))
             {
                 holder.mTextView.setTextColor(Color.RED);
+               // System.out.println(position+" "+where);
                 where=position;
             }
             if (!temp.equals(nextbus))
