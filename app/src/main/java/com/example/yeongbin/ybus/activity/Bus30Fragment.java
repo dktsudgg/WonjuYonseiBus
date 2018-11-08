@@ -26,7 +26,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
+//학교에서 출발과  그외 데이터를 나눠야함 비고부분
 public class Bus30Fragment extends Fragment {
     //Handler mHandler = null;
     public ArrayList<BusTimeInfo> bustime=null;
