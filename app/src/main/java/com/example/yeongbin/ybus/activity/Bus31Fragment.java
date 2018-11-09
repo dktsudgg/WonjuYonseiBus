@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
-
+//학교에서 출발과  그외 데이터를 나눠야함 비고부분 (연세대 그외만 만들면되 31번은 그외출 34번은 연세대출 그외출 30번은 연세대출
 public class Bus31Fragment extends Fragment {
     //Handler mHandler = null;
     public ArrayList<BusTimeInfo> bustime=null;
@@ -242,6 +242,7 @@ public class Bus31Fragment extends Fragment {
             if (temp.equals(nextbus))
             {
                 holder.mTextView.setTextColor(Color.RED);
+               // System.out.println(position+" "+where);
                 where=position;
             }
             if (!temp.equals(nextbus))
